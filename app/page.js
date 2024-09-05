@@ -1,95 +1,48 @@
-import Image from "next/image";
+"use client"
 import styles from "./page.module.css";
+import {useState} from "react";
+import {PrivyProvider, useFundWallet} from "@privy-io/react-auth";
+import {SimpleModal} from "@/app/SimpleModal";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const {fundWallet} = useFundWallet();
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    const [inputAmount, setInputAmount] = useState(0.1);
+
+    const topUp = async () => {
+        await fundWallet(
+            "0x149E9bc2f1a75F9266C450249E103d777Cf5c386",
+            {
+                amount: 0.4
+            }
+        );
+    }
+
+    return (
+        <PrivyProvider appId={"cm0aork0f0269qixmaz67yjrd"} clientId={"client-WY5avK6HW86c1yoyQ2CjVmZR7USnSJ1dFZoFSo3TDBUMN"}>
+            <div className={styles.page}>
+                <main className={styles.main}>
+
+
+                    <SimpleModal title={"Deposit Crypto"} visible={true} content={<div className={"fc gap-2"}>
+                    <div className={styles.ctas}>
+                        <div style={{display: "flex", flexDirection: "column"}}>
+                            <span>Amount:</span>
+                            <input style={{fontSize: "18px"}} value={inputAmount}
+                                   onChange={(e) => setInputAmount(e.target.value)}/>
+                        </div>
+                        <a
+                            onClick={topUp}
+                            className={styles.primary}
+                        >
+
+                            Top Up
+                        </a>
+                    </div>
+                    </div>}/>
+                </main>
+
+            </div>
+        </PrivyProvider>
+    );
 }
